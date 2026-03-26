@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import StatsCard from '../components/StatsCard';
 import { Users, CheckCircle, XCircle, Clock, Calendar } from 'lucide-react';
 import api from '../services/api';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const [stats, setStats] = useState({
         totalStudents: 0,
         attendancePercentage: 0,
@@ -100,9 +102,9 @@ const Dashboard = () => {
                 <div className="quick-actions glass">
                     <h3>Quick Actions</h3>
                     <div className="actions-grid">
-                        <button className="action-btn">Mark Attendance</button>
-                        <button className="action-btn secondary">Add New Student</button>
-                        <button className="action-btn secondary">Download Report</button>
+                        <button className="action-btn" onClick={() => navigate('/attendance')}>Mark Attendance</button>
+                        <button className="action-btn secondary" onClick={() => navigate('/students')}>Add New Student</button>
+                        <button className="action-btn secondary" onClick={() => navigate('/records')}>View Records</button>
                     </div>
                 </div>
             </div>

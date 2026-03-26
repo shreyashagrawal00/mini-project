@@ -18,9 +18,9 @@ const AttendanceMarking = () => {
         try {
             const { data } = await api.get('/students');
             setStudents(data);
-            // Initialize attendance: all Present by default
+            // Initialize attendance: all null by default
             const initialAttendance = {};
-            data.forEach(s => initialAttendance[s._id] = 'Present');
+            data.forEach(s => initialAttendance[s._id] = null);
             setAttendance(initialAttendance);
         } catch (err) {
             console.error(err);
@@ -29,11 +29,24 @@ const AttendanceMarking = () => {
         }
     };
 
+    const handleMarkAllPresent = () => {
+        const markedAll = {};
+        students.forEach(s => markedAll[s._id] = 'Present');
+        setAttendance(markedAll);
+    };
+
     const handleStatusChange = (studentId, status) => {
         setAttendance({ ...attendance, [studentId]: status });
     };
 
     const handleSubmit = async () => {
+        // Check if all students are marked
+        const unmarkedCount = students.filter(s => !attendance[s._id]).length;
+        if (unmarkedCount > 0) {
+            setMessage({ type: 'error', text: `Please mark attendance for all students (${unmarkedCount} remaining).` });
+            return;
+        }
+
         setSaving(true);
         try {
             const attendanceRecords = Object.keys(attendance).map(id => ({
@@ -57,13 +70,19 @@ const AttendanceMarking = () => {
                     <h1>Mark Attendance</h1>
                     <p>Select students and mark their status for today.</p>
                 </div>
-                <div className="date-picker glass">
-                    <Calendar size={18} />
-                    <input 
-                        type="date" 
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
+                <div className="header-actions">
+                    <button className="mark-all-btn glass" onClick={handleMarkAllPresent} disabled={students.length === 0}>
+                        <Check size={18} />
+                        <span>Mark All Present</span>
+                    </button>
+                    <div className="date-picker glass">
+                        <Calendar size={18} />
+                        <input 
+                            type="date" 
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                        />
+                    </div>
                 </div>
             </header>
 
@@ -145,6 +164,26 @@ const AttendanceMarking = () => {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                }
+                .header-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
+                .mark-all-btn {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 0.6rem 1rem;
+                    border-radius: 12px;
+                    font-weight: 600;
+                    color: var(--primary);
+                    background: white;
+                    border: 1.5px solid var(--primary);
+                }
+                .mark-all-btn:hover:not(:disabled) {
+                    background: var(--primary);
+                    color: white;
                 }
                 .date-picker {
                     display: flex;
@@ -237,11 +276,19 @@ const AttendanceMarking = () => {
                     font-size: 0.85rem;
                     background: #f1f5f9;
                     color: var(--secondary);
-                    transition: all 0.2s;
+                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                 }
-                .status-btn.present.active { background: #d1fae5; color: var(--success); }
-                .status-btn.absent.active { background: #fee2e2; color: var(--danger); }
-                .status-btn.late.active { background: #fef3c7; color: var(--warning); }
+                .status-btn:hover {
+                    transform: translateY(-1px);
+                    filter: brightness(0.95);
+                }
+                .status-btn:active {
+                    transform: translateY(0);
+                    scale: 0.98;
+                }
+                .status-btn.present.active { background: #d1fae5; color: var(--success); box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2); }
+                .status-btn.absent.active { background: #fee2e2; color: var(--danger); box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2); }
+                .status-btn.late.active { background: #fef3c7; color: var(--warning); box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2); }
                 
                 .submit-section {
                     display: flex;

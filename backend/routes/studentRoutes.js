@@ -13,35 +13,43 @@ router.get('/', protect, async (req, res) => {
 // @desc    Create new student
 // @route   POST /api/students
 router.post('/', protect, async (req, res) => {
-    const { name, rollNo, class: studentClass, email, phone } = req.body;
-    const studentExists = await Student.findOne({ rollNo });
+    try {
+        const { name, rollNo, universityRollNo, class: studentClass, phone } = req.body;
 
-    if (studentExists) {
-        res.status(400).json({ message: 'Student already exists' });
+        const studentExists = await Student.findOne({ rollNo });
+        if (studentExists) {
+            res.status(400).json({ message: 'Student already exists' });
+            return;
+        }
+
+        const student = await Student.create({ name, rollNo, universityRollNo, class: studentClass, phone });
+        res.status(201).json(student);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-
-    const student = new Student({ name, rollNo, class: studentClass, email, phone });
-    const createdStudent = await student.save();
-    res.status(201).json(createdStudent);
 });
 
 // @desc    Update student
 // @route   PUT /api/students/:id
 router.put('/:id', protect, async (req, res) => {
-    const { name, rollNo, class: studentClass, email, phone } = req.body;
-    const student = await Student.findById(req.params.id);
+    try {
+        const { name, rollNo, universityRollNo, class: studentClass, phone } = req.body;
+        const student = await Student.findById(req.params.id);
 
-    if (student) {
-        student.name = name || student.name;
-        student.rollNo = rollNo || student.rollNo;
-        student.class = studentClass || student.class;
-        student.email = email || student.email;
-        student.phone = phone || student.phone;
+        if (student) {
+            student.name = name || student.name;
+            student.rollNo = rollNo || student.rollNo;
+            student.universityRollNo = universityRollNo || student.universityRollNo;
+            student.class = studentClass || student.class;
+            student.phone = phone || student.phone;
 
-        const updatedStudent = await student.save();
-        res.json(updatedStudent);
-    } else {
-        res.status(404).json({ message: 'Student not found' });
+            const updatedStudent = await student.save();
+            res.json(updatedStudent);
+        } else {
+            res.status(404).json({ message: 'Student not found' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 });
 

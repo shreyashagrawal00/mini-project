@@ -38,12 +38,12 @@ const seedData = async () => {
         console.log('Admin User Created (email: admin@school.com, password: password123)');
 
         // Create Students
-        const students = await Student.insertMany([
-            { name: 'John Doe', rollNo: '101', class: '10-A', email: 'john@example.com' },
-            { name: 'Jane Smith', rollNo: '102', class: '10-A', email: 'jane@example.com' },
-            { name: 'Alice Brown', rollNo: '103', class: '10-B', email: 'alice@example.com' },
-            { name: 'Bob Wilson', rollNo: '104', class: '10-C', email: 'bob@example.com' },
-            { name: 'Charlie Davis', rollNo: '105', class: '10-B', email: 'charlie@example.com' }
+        const students = await Student.create([
+            { name: 'John Doe', rollNo: '101', universityRollNo: 'UNI2024001', class: '10-A' },
+            { name: 'Jane Smith', rollNo: '102', universityRollNo: 'UNI2024002', class: '10-B' },
+            { name: 'Alice Brown', rollNo: '103', universityRollNo: 'UNI2024003', class: '10-A' },
+            { name: 'Bob Wilson', rollNo: '104', universityRollNo: 'UNI2024004', class: '10-C' },
+            { name: 'Charlie Davis', rollNo: '105', universityRollNo: 'UNI2024005', class: '10-B' },
         ]);
 
         console.log(`${students.length} Students Created!`);

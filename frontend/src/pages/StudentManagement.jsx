@@ -8,7 +8,7 @@ const StudentManagement = () => {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingStudent, setEditingStudent] = useState(null);
-    const [formData, setFormData] = useState({ name: '', rollNo: '', class: '', email: '', phone: '' });
+    const [formData, setFormData] = useState({ name: '', rollNo: '', universityRollNo: '', class: '' });
 
     useEffect(() => {
         fetchStudents();
@@ -57,13 +57,12 @@ const StudentManagement = () => {
             setFormData({ 
                 name: student.name, 
                 rollNo: student.rollNo, 
-                class: student.class, 
-                email: student.email || '', 
-                phone: student.phone || '' 
+                universityRollNo: student.universityRollNo,
+                class: student.class
             });
         } else {
             setEditingStudent(null);
-            setFormData({ name: '', rollNo: '', class: '', email: '', phone: '' });
+            setFormData({ name: '', rollNo: '', universityRollNo: '', class: '' });
         }
         setIsModalOpen(true);
     };
@@ -76,6 +75,7 @@ const StudentManagement = () => {
     const filteredStudents = students.filter(s => 
         s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         s.rollNo.includes(searchTerm) ||
+        (s.universityRollNo && s.universityRollNo.toLowerCase().includes(searchTerm.toLowerCase())) ||
         s.class.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -115,7 +115,7 @@ const StudentManagement = () => {
                             <th>Roll No</th>
                             <th>Name</th>
                             <th>Class</th>
-                            <th>Email</th>
+                            <th>Uni. Roll No</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -130,7 +130,7 @@ const StudentManagement = () => {
                                     <td><span className="roll-badge">{student.rollNo}</span></td>
                                     <td className="st-name">{student.name}</td>
                                     <td>{student.class}</td>
-                                    <td className="st-email">{student.email || '-'}</td>
+                                    <td className="st-email">{student.universityRollNo}</td>
                                     <td>
                                         <div className="actions">
                                             <button className="edit-btn" onClick={() => openModal(student)}>
@@ -183,11 +183,12 @@ const StudentManagement = () => {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label>Email Address</label>
+                                <label>University Roll Number</label>
                                 <input 
-                                    type="email" 
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    type="text" 
+                                    required 
+                                    value={formData.universityRollNo}
+                                    onChange={(e) => setFormData({...formData, universityRollNo: e.target.value})}
                                 />
                             </div>
                             <div className="modal-actions">
