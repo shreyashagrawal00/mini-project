@@ -1,0 +1,140 @@
+import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+    LayoutDashboard, 
+    Users, 
+    CheckSquare, 
+    History, 
+    BarChart3, 
+    LogOut,
+    GraduationCap
+} from 'lucide-react';
+
+const Sidebar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('userInfo');
+        navigate('/login');
+        window.location.reload();
+    };
+
+    const navItems = [
+        { path: '/', name: 'Dashboard', icon: <LayoutDashboard size={20} /> },
+        { path: '/students', name: 'Students', icon: <Users size={20} /> },
+        { path: '/attendance', name: 'Mark Attendance', icon: <CheckSquare size={20} /> },
+        { path: '/records', name: 'Records', icon: <History size={20} /> },
+        { path: '/analytics', name: 'Analytics', icon: <BarChart3 size={20} /> },
+    ];
+
+    return (
+        <aside className="sidebar">
+            <div className="sidebar-header">
+                <div className="brand">
+                    <GraduationCap className="logo-icon" size={32} />
+                    <span>SmartAttend</span>
+                </div>
+            </div>
+            <nav className="sidebar-nav custom-scrollbar">
+                <ul>
+                    {navItems.map((item) => (
+                        <li key={item.path}>
+                            <NavLink 
+                                to={item.path} 
+                                className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+                            >
+                                {item.icon}
+                                <span>{item.name}</span>
+                            </NavLink>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+            <div className="sidebar-footer">
+                <button onClick={handleLogout} className="logout-btn">
+                    <LogOut size={20} />
+                    <span>Logout</span>
+                </button>
+            </div>
+            <style>{`
+                .sidebar {
+                    width: var(--sidebar-width);
+                    height: 100vh;
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    background: var(--bg-card);
+                    border-right: 1px solid var(--border);
+                    display: flex;
+                    flex-direction: column;
+                    z-index: 1000;
+                    transition: all 0.3s ease;
+                }
+                .sidebar-header {
+                    padding: 2rem 1.5rem;
+                }
+                .brand {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--primary);
+                }
+                .logo-icon {
+                    color: var(--primary);
+                }
+                .sidebar-nav {
+                    flex: 1;
+                    padding: 0 1rem;
+                    overflow-y: auto;
+                }
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 0.875rem 1rem;
+                    border-radius: 12px;
+                    color: var(--secondary);
+                    font-weight: 500;
+                    transition: all 0.2s;
+                    margin-bottom: 4px;
+                }
+                .nav-link:hover {
+                    background: #f1f5f9;
+                    color: var(--primary);
+                }
+                .nav-link.active {
+                    background: #eef2ff;
+                    color: var(--primary);
+                }
+                .sidebar-footer {
+                    padding: 1.5rem;
+                    border-top: 1px solid var(--border);
+                }
+                .logout-btn {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 0.875rem 1rem;
+                    border-radius: 12px;
+                    color: var(--danger);
+                    background: transparent;
+                    font-weight: 500;
+                    transition: all 0.2s;
+                }
+                .logout-btn:hover {
+                    background: #fef2f2;
+                }
+                @media (max-width: 768px) {
+                    .sidebar {
+                        transform: translateX(-100%);
+                    }
+                }
+            `}</style>
+        </aside>
+    );
+};
+
+export default Sidebar;
