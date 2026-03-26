@@ -48,7 +48,7 @@ const Analytics = () => {
                 <div className="chart-card glass large">
                     <div className="card-header">
                         <h3>Weekly Attendance Trend</h3>
-                        <TradingUp size={18} className="icon-trend" />
+                        <TrendingUp size={18} className="icon-trend" />
                     </div>
                     <div className="chart-container">
                         <ResponsiveContainer width="100%" height={300}>

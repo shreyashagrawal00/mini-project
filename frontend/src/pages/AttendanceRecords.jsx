@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Calendar, Filter, Download, User, Search, ChevronRight } from 'lucide-react';
+import { Calendar, Filter, Download, User, Search, ChevronRight, History } from 'lucide-react';
 
 const AttendanceRecords = () => {
     const [records, setRecords] = useState([]);
