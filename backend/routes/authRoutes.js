@@ -33,7 +33,15 @@ router.post('/register', async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-        res.status(400).json({ message: 'User already exists' });
+        return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Password validation: At least one uppercase letter and one special character
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+    if (!hasUppercase || !hasSpecial) {
+        return res.status(400).json({ message: 'Password must contain at least one uppercase letter and one special character.' });
     }
 
     const user = await User.create({ name, email, password, isAdmin });

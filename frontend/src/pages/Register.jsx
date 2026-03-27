@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import { Mail, Lock, User, GraduationCap, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, GraduationCap, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -15,6 +16,17 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        // Validation: At least one uppercase letter and one special character
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+        if (!hasUppercase || !hasSpecial) {
+            setError('Password must contain at least one uppercase letter and one special character.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const { data } = await api.post('/auth/register', { name, email, password, isAdmin: true });
             localStorage.setItem('userInfo', JSON.stringify(data));
@@ -74,13 +86,22 @@ const Register = () => {
                         <div className="input-wrapper">
                             <Lock className="input-icon" size={20} />
                             <input 
-                                type="password" 
+                                type={showPassword ? "text" : "password"} 
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 required 
                             />
+                            <button 
+                                type="button" 
+                                className="password-toggle" 
+                                onClick={() => setShowPassword(!showPassword)}
+                                tabIndex="-1"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
                         </div>
+                        <p className="hintText">Must contain 1 uppercase & 1 special character.</p>
                     </div>
 
                     <button type="submit" className="login-btn" disabled={loading}>
@@ -167,6 +188,26 @@ const Register = () => {
                 .input-wrapper input:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 4px rgba(109, 139, 116, 0.1);
+                }
+                .password-toggle {
+                    position: absolute;
+                    right: 1rem;
+                    background: transparent;
+                    color: var(--secondary);
+                    padding: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: color 0.2s;
+                }
+                .password-toggle:hover {
+                    color: var(--primary);
+                }
+                .hintText {
+                    font-size: 0.75rem;
+                    color: var(--secondary);
+                    margin-top: 0.25rem;
+                    opacity: 0.8;
                 }
                 .login-btn {
                     background: var(--primary);

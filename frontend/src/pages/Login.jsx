@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import { Mail, Lock, GraduationCap, ArrowRight } from 'lucide-react';
+import { Mail, Lock, GraduationCap, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -59,12 +60,23 @@ const Login = () => {
                         <div className="input-wrapper">
                             <Lock className="input-icon" size={20} />
                             <input 
-                                type="password" 
+                                type={showPassword ? "text" : "password"} 
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 required 
                             />
+                            <button 
+                                type="button" 
+                                className="password-toggle" 
+                                onClick={() => setShowPassword(!showPassword)}
+                                tabIndex="-1"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
+                        <div className="forgot-link-wrapper">
+                            <Link to="/forgot-password" title="Feature coming soon">Forgot Password?</Link>
                         </div>
                     </div>
 
@@ -153,6 +165,33 @@ const Login = () => {
                 .input-wrapper input:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 4px rgba(109, 139, 116, 0.1);
+                }
+                .password-toggle {
+                    position: absolute;
+                    right: 1rem;
+                    background: transparent;
+                    color: var(--secondary);
+                    padding: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: color 0.2s;
+                }
+                .password-toggle:hover {
+                    color: var(--primary);
+                }
+                .forgot-link-wrapper {
+                    text-align: right;
+                    margin-top: 0.5rem;
+                }
+                .forgot-link-wrapper a {
+                    font-size: 0.85rem;
+                    color: var(--secondary);
+                    font-weight: 500;
+                    transition: color 0.2s;
+                }
+                .forgot-link-wrapper a:hover {
+                    color: var(--primary);
                 }
                 .login-btn {
                     background: var(--primary);
