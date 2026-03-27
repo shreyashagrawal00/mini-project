@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const classSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
-    description: { type: String },
+    subjectName: { type: String },
     teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 

@@ -19,13 +19,13 @@ router.get('/', protect, async (req, res) => {
 // @route   POST /api/classes
 router.post('/', protect, async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, subjectName } = req.body;
         const classExists = await Class.findOne({ name });
         if (classExists) {
             return res.status(400).json({ message: 'Class already exists' });
         }
         
-        const classData = { name, description };
+        const classData = { name, subjectName };
         if (req.user && req.user._id) {
             classData.teacher = req.user._id;
         }

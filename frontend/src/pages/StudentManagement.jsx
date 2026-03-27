@@ -13,7 +13,7 @@ const StudentManagement = () => {
     const [isClassModalOpen, setIsClassModalOpen] = useState(false);
     const [editingStudent, setEditingStudent] = useState(null);
     const [formData, setFormData] = useState({ name: '', rollNo: '', universityRollNo: '', class: '' });
-    const [classForm, setClassForm] = useState({ name: '', description: '' });
+    const [classForm, setClassForm] = useState({ name: '', subjectName: '' });
 
     useEffect(() => {
         fetchInitialData();
@@ -41,7 +41,7 @@ const StudentManagement = () => {
             await api.post('/classes', classForm);
             fetchInitialData();
             setIsClassModalOpen(false);
-            setClassForm({ name: '', description: '' });
+            setClassForm({ name: '', subjectName: '' });
         } catch (err) {
             alert(err.response?.data?.message || 'Error saving class');
         }
@@ -163,7 +163,7 @@ const StudentManagement = () => {
                                 <div className="class-icon"><GraduationCap size={32} /></div>
                                 <div className="class-info">
                                     <h3>{cls.name}</h3>
-                                    <p>{cls.description || 'No description'}</p>
+                                    <p>{cls.subjectName || 'No subject name'}</p>
                                 </div>
                                 <div className="class-student-count">
                                     {students.filter(s => s.class === cls.name).length} Students
@@ -251,11 +251,11 @@ const StudentManagement = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Description</label>
+                                <label>Subject Name</label>
                                 <input 
                                     type="text" placeholder="e.g. Science Batch 2024"
-                                    value={classForm.description}
-                                    onChange={(e) => setClassForm({...classForm, description: e.target.value})}
+                                    value={classForm.subjectName}
+                                    onChange={(e) => setClassForm({...classForm, subjectName: e.target.value})}
                                 />
                             </div>
                             <div className="modal-actions">

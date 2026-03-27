@@ -25,6 +25,7 @@ const seedData = async () => {
         await User.deleteMany();
         await Student.deleteMany();
         await Attendance.deleteMany();
+        await Class.deleteMany();
 
         console.log('Data Cleared!');
 
@@ -40,11 +41,11 @@ const seedData = async () => {
 
         // Create Classes
         await Class.create([
-            { name: '10-A', description: 'Science Section A' },
-            { name: '10-B', description: 'Science Section B' },
-            { name: '10-C', description: 'Commerce Section A' },
-            { name: '11-A', description: 'Higher Secondary A' },
-            { name: '12-A', description: 'Senior Secondary A' },
+            { name: '10-A', subjectName: 'Science Section A' },
+            { name: '10-B', subjectName: 'Science Section B' },
+            { name: '10-C', subjectName: 'Commerce Section A' },
+            { name: '11-A', subjectName: 'Higher Secondary A' },
+            { name: '12-A', subjectName: 'Senior Secondary A' },
         ]);
         console.log('Classes Created!');
 

@@ -9,6 +9,7 @@ import StudentManagement from './pages/StudentManagement';
 import AttendanceMarking from './pages/AttendanceMarking';
 import AttendanceRecords from './pages/AttendanceRecords';
 import Analytics from './pages/Analytics';
+import About from './pages/About';
 import './index.css';
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
                             <Route path="/attendance" element={isAuthenticated ? <AttendanceMarking /> : <Navigate to="/login" />} />
                             <Route path="/records" element={isAuthenticated ? <AttendanceRecords /> : <Navigate to="/login" />} />
                             <Route path="/analytics" element={isAuthenticated ? <Analytics /> : <Navigate to="/login" />} />
+                            <Route path="/about" element={isAuthenticated ? <About /> : <Navigate to="/login" />} />
                         </Routes>
                     </div>
                 </div>

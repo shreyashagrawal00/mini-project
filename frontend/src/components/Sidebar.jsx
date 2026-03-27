@@ -7,7 +7,8 @@ import {
     History, 
     BarChart3, 
     LogOut,
-    GraduationCap
+    GraduationCap,
+    Info
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -25,6 +26,7 @@ const Sidebar = () => {
         { path: '/attendance', name: 'Mark Attendance', icon: <CheckSquare size={20} /> },
         { path: '/records', name: 'Records', icon: <History size={20} /> },
         { path: '/analytics', name: 'Analytics', icon: <BarChart3 size={20} /> },
+        { path: '/about', name: 'About GLA', icon: <Info size={20} /> },
     ];
 
     return (
