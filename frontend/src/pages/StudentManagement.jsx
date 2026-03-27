@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Search, Plus, Edit, Trash2, GraduationCap, ChevronLeft, UserPlus, BookOpen } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, GraduationCap, ChevronLeft, UserPlus, BookOpen, Users, Grid, ArrowLeft } from 'lucide-react';
 
 const StudentManagement = () => {
     const [students, setStudents] = useState([]);
@@ -123,41 +123,6 @@ const StudentManagement = () => {
     return (
         <div className="student-management">
             <div className="main-layout slide-up">
-                <div className={`class-sidebar glass slide-up stagger-1`}>
-                    <div className="sidebar-header">
-                        <h3>Academic Sections</h3>
-                        <button className="add-btn primary" onClick={() => setIsClassModalOpen(true)}>
-                            <Plus size={18} />
-                        </button>
-                    </div>
-                    
-                    <div className="class-list custom-scrollbar">
-                        {classes.map((cls, index) => (
-                            <div 
-                                key={cls._id} 
-                                className={`class-item ${selectedClass?._id === cls._id ? 'active' : ''} slide-up stagger-${(index % 5) + 1}`}
-                                onClick={() => setSelectedClass(cls)}
-                            >
-                                <div className="class-info">
-                                    <span className="class-name">{cls.name}</span>
-                                    <span className="class-meta">{cls.studentCount || 0} Students</span>
-                                </div>
-                                <div className="class-actions">
-                                    <button className="icon-btn-sm" onClick={(e) => { e.stopPropagation(); handleDeleteClass(cls._id); }}>
-                                        <Trash2 size={14} />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                        {classes.length === 0 && !loading && (
-                            <div className="empty-classes">
-                                <BookOpen size={32} />
-                                <p>No classes defined yet.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
                 <div className="content-area">
                     {loading ? (
                         <div className="loading-state glass slide-up stagger-2">
@@ -166,47 +131,92 @@ const StudentManagement = () => {
                             <p>Please wait while we fetch your academic data.</p>
                         </div>
                     ) : !selectedClass ? (
-                        <div className="empty-state-view glass slide-up stagger-2">
-                            <div className="empty-illustration">
-                                <div className="circle-bg">
-                                    <Users size={60} />
+                        <div className="class-selection-view fade-in">
+                            <header className="page-header">
+                                <div className="header-title">
+                                    <h1>Academic Sections</h1>
+                                    <p>Select a class box to manage student enrollments and records.</p>
                                 </div>
-                                <div className="dots-grid"></div>
-                            </div>
-                            <h3>Select a Class Section</h3>
-                            <p>Choose an academic section from the left sidebar to manage its students, view roster details, and perform administrative actions.</p>
-                            <div className="empty-actions">
                                 <button className="add-btn primary" onClick={() => setIsClassModalOpen(true)}>
                                     <Plus size={18} />
-                                    <span>Add Class</span>
+                                    <span>Create New Class</span>
                                 </button>
+                            </header>
+
+                            <div className="classes-grid custom-scrollbar">
+                                {classes.map((cls, index) => (
+                                    <div 
+                                        key={cls._id} 
+                                        className={`class-card glass slide-up stagger-${(index % 8) + 1}`}
+                                        onClick={() => setSelectedClass(cls)}
+                                    >
+                                        <div className="class-card-header">
+                                            <div className="class-icon-box">
+                                                <GraduationCap size={24} />
+                                            </div>
+                                            <button className="delete-class-btn" onClick={(e) => { e.stopPropagation(); handleDeleteClass(cls._id); }}>
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                        <div className="class-card-body">
+                                            <h3>{cls.name}</h3>
+                                            <p>{cls.subjectName}</p>
+                                            <div className="student-count-badge">
+                                                <Users size={14} />
+                                                <span>{cls.studentCount || 0} Students</span>
+                                            </div>
+                                        </div>
+                                        <div className="class-card-footer">
+                                            <span>Manage Roster</span>
+                                            <ArrowLeft size={14} style={{ transform: 'rotate(180deg)' }} />
+                                        </div>
+                                    </div>
+                                ))}
+                                {classes.length === 0 && (
+                                    <div className="empty-classes-grid glass slide-up">
+                                        <BookOpen size={48} />
+                                        <h3>No Classes Defined</h3>
+                                        <p>Get started by creating your first academic section below.</p>
+                                        <button className="add-btn primary" onClick={() => setIsClassModalOpen(true)}>
+                                            <Plus size={18} />
+                                            <span>Add Class</span>
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
                         <div className="student-list-container slide-up stagger-2">
-                            <header className="page-header">
-                                <div className="header-title">
-                                    <div className="class-badge">Class {selectedClass?.name}</div>
-                                    <h1>Student Roster</h1>
-                                    <p>Managing {filteredStudents.length} students in this class.</p>
+                            <header className="page-header unified-command-bar">
+                                <div className="header-left">
+                                    <button className="back-btn-mini" onClick={() => setSelectedClass(null)} title="Back to Classes">
+                                        <ChevronLeft size={22} />
+                                    </button>
+                                    <div className="breadcrumb-title">
+                                        <span className="bc-label">Academic Roster</span>
+                                        <span className="bc-separator">/</span>
+                                        <h1>{selectedClass?.name}</h1>
+                                        <div className="student-count-pill">
+                                            {filteredStudents.length} Students
+                                        </div>
+                                    </div>
                                 </div>
-                                <button className="add-btn primary" onClick={() => openModal()}>
-                                    <UserPlus size={18} />
-                                    <span>Enlist Student</span>
-                                </button>
+                                <div className="header-right">
+                                    <div className="unified-search glass">
+                                        <Search size={18} />
+                                        <input 
+                                            type="text" 
+                                            placeholder={`Find student in ${selectedClass?.name}...`}
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
+                                    <button className="add-btn primary" onClick={() => openModal()}>
+                                        <UserPlus size={18} />
+                                        <span>Enlist Student</span>
+                                    </button>
+                                </div>
                             </header>
-
-                            <div className="list-controls glass scale-in">
-                                <div className="search-box">
-                                    <Search size={18} />
-                                    <input 
-                                        type="text" 
-                                        placeholder={`Search students in ${selectedClass.name}...`}
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </div>
-                            </div>
 
                             <div className="table-responsive glass">
                                 <table className="custom-table">
@@ -372,137 +382,123 @@ const StudentManagement = () => {
                 .stagger-4 { animation-delay: 0.4s; }
                 .stagger-5 { animation-delay: 0.5s; }
 
-                .main-layout {
-                    display: flex;
-                    width: 100%;
-                    gap: 1.5rem;
-                }
-
-                .class-sidebar {
-                    flex-shrink: 0;
-                    width: 300px;
-                    border-radius: var(--radius-xl);
-                    display: flex;
-                    flex-direction: column;
-                    overflow: hidden;
-                    height: calc(100vh - 100px); /* Adjust based on header/footer */
-                }
-
-                .sidebar-header {
-                    padding: 1.5rem;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    border-bottom: 1px solid var(--border);
-                }
-                .sidebar-header h3 { font-size: 0.9rem; letter-spacing: 0.02em; font-weight: 800; text-transform: uppercase; color: var(--text-muted); opacity: 0.8; }
+                .main-layout { display: flex; flex-direction: column; width: 100%; gap: 1.5rem; }
+                .content-area { width: 100%; display: flex; flex-direction: column; gap: 1.5rem; }
                 
-                .class-list { padding: 0.75rem; flex: 1; overflow-y: auto; }
-                .class-item {
+                .class-selection-view { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
+                .classes-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                    gap: 1.5rem;
+                    padding-bottom: 2rem;
+                }
+                
+                .class-card {
+                    padding: 1.5rem;
+                    border-radius: var(--radius-xl);
                     display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 1rem 1.15rem;
-                    border-radius: var(--radius-md);
-                    margin-bottom: 0.5rem;
+                    flex-direction: column;
+                    gap: 1.25rem;
                     cursor: pointer;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    border: 1.5px solid transparent;
-                }
-                .class-item:hover { background: rgba(75, 107, 80, 0.05); transform: translateX(4px); }
-                .class-item.active {
-                    background: var(--primary);
-                    color: white;
-                    box-shadow: 0 8px 16px rgba(75, 107, 80, 0.2);
-                    transform: translateX(6px);
-                }
-                .class-name { display: block; font-weight: 700; font-size: 1rem; }
-                .class-meta { display: block; font-size: 0.75rem; font-weight: 600; opacity: 0.8; }
-                .class-actions { display: flex; gap: 8px; }
-                .icon-btn-sm {
-                    width: 28px; height: 28px; border-radius: 6px;
-                    display: flex; align-items: center; justify-content: center;
-                    background: rgba(255,255,255,0.2); /* For active state */
-                    color: white; /* For active state */
-                    transition: all 0.2s;
-                }
-                .class-item:not(.active) .icon-btn-sm {
-                    background: var(--danger-bg);
-                    color: var(--danger);
-                }
-                .class-item:not(.active) .icon-btn-sm:hover {
-                    background: var(--danger);
-                    color: white;
-                }
-                .class-item.active .icon-btn-sm:hover {
-                    background: rgba(255,255,255,0.3);
-                }
-
-                .empty-classes {
-                    padding: 2rem 1rem;
-                    text-align: center;
-                    color: var(--text-muted);
-                    opacity: 0.7;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .content-area {
-                    flex-grow: 1;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1.5rem;
-                }
-
-                .empty-state-view {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 4rem 2rem;
-                    text-align: center;
-                    border-radius: var(--radius-xl);
-                }
-                .empty-illustration {
                     position: relative;
-                    margin-bottom: 2rem;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    border: 1px solid transparent;
                 }
-                .circle-bg {
-                    width: 120px; height: 120px; background: var(--bg-subtle);
-                    border-radius: 50%; display: flex; align-items: center;
-                    justify-content: center; color: var(--text-muted); opacity: 0.4;
+                .class-card:hover {
+                    transform: translateY(-8px);
+                    border-color: var(--primary);
+                    box-shadow: 0 12px 30px rgba(75, 107, 80, 0.15);
                 }
-                .empty-state-view h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; color: var(--text-main); }
-                .empty-state-view p { max-width: 400px; margin-bottom: 2rem; line-height: 1.6; }
-                .empty-actions { display: flex; gap: 1rem; }
+                
+                .class-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+                .class-icon-box {
+                    width: 48px; height: 48px; background: var(--bg-subtle); color: var(--primary);
+                    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+                }
+                .delete-class-btn {
+                    width: 32px; height: 32px; border-radius: 8px; background: var(--danger-bg); color: var(--danger);
+                    display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.2s;
+                }
+                .class-card:hover .delete-class-btn { opacity: 1; }
+                .delete-class-btn:hover { background: var(--danger); color: white; }
+                
+                .class-card-body h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
+                .class-card-body p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+                .student-count-badge {
+                    display: flex; align-items: center; gap: 6px; margin-top: 1rem;
+                    color: var(--primary); font-weight: 700; font-size: 0.8rem;
+                }
+                
+                .class-card-footer {
+                    margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border);
+                    display: flex; justify-content: space-between; align-items: center;
+                    font-size: 0.75rem; font-weight: 700; color: var(--primary); opacity: 0.8;
+                }
+                
+                .empty-classes-grid {
+                    grid-column: 1 / -1; padding: 5rem 2rem; display: flex; flex-direction: column;
+                    align-items: center; justify-content: center; text-align: center; gap: 1.25rem;
+                    border-radius: var(--radius-xl); color: var(--text-muted);
+                }
+                .empty-classes-grid h3 { font-size: 1.5rem; color: var(--text-main); }
+                
+                .back-to-grid-btn {
+                    display: flex; align-items: center; gap: 8px; background: transparent;
+                    color: var(--primary); font-weight: 700; font-size: 0.85rem;
+                    padding: 6px 12px; border-radius: 8px; margin-bottom: 1.25rem;
+                    transition: all 0.2s; border: 1.5px solid var(--primary); width: fit-content;
+                }
+                .back-to-grid-btn:hover { background: var(--primary); color: white; }
+                
+                .header-title-flex { display: flex; flex-direction: column; }
+                
+                .header-title-flex { display: flex; flex-direction: column; }
+                
+                .unified-command-bar {
+                    display: flex; justify-content: space-between; align-items: center;
+                    padding: 0.75rem 0; border-bottom: 2px solid var(--border);
+                    margin-bottom: 2rem; gap: 2rem;
+                }
+                
+                .breadcrumb-title { display: flex; align-items: center; gap: 10px; }
+                .bc-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+                .bc-separator { color: var(--border); font-weight: 300; font-size: 1.25rem; }
+                .breadcrumb-title h1 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); line-height: 1; }
+                
+                .student-count-pill {
+                    padding: 4px 10px; background: var(--bg-subtle); color: var(--primary);
+                    border-radius: 20px; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--border);
+                }
+                
+                .header-right { display: flex; align-items: center; gap: 1.25rem; }
+                .unified-search {
+                    display: flex; align-items: center; gap: 12px;
+                    background: var(--bg-subtle); border: 1.5px solid var(--border);
+                    padding: 0.65rem 1.25rem; border-radius: 12px; min-width: 320px;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .unified-search:focus-within {
+                    border-color: var(--primary); background: white;
+                    box-shadow: 0 8px 25px rgba(75, 107, 80, 0.1);
+                    transform: translateY(-2px);
+                }
+                .unified-search input { background: transparent; border: none; outline: none; width: 100%; font-size: 0.9rem; color: var(--text-main); }
+                
+                .back-btn-mini {
+                    width: 42px; height: 42px; border-radius: 12px; display: flex;
+                    align-items: center; justify-content: center; background: white;
+                    color: var(--primary); transition: all 0.2s; border: 1.5px solid var(--border);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                }
+                .back-btn-mini:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateX(-4px); }
 
-                .loading-state {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 4rem 2rem;
-                    text-align: center;
-                    border-radius: var(--radius-xl);
-                    color: var(--text-muted);
-                }
-                .loading-state h3 { margin-top: 1rem; }
-
-                .student-list-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1.5rem;
-                }
+                .table-responsive { border-radius: var(--radius-xl); overflow: hidden; }
 
                 .page-header {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 0; /* Adjusted for new layout */
+                    margin-bottom: 0; 
                 }
                 .header-title h1 { font-size: 2rem; margin-bottom: 0.5rem; }
                 .header-title p { font-size: 0.9rem; color: var(--text-muted); }

@@ -41,8 +41,13 @@ const AttendanceMarking = () => {
         : students.filter(s => s.class === selectedClass);
 
     const handleMarkAllPresent = () => {
+        const allPresent = filteredStudents.every(s => attendance[s._id] === 'Present');
         const markedAll = { ...attendance };
-        filteredStudents.forEach(s => markedAll[s._id] = 'Present');
+        
+        filteredStudents.forEach(s => {
+            markedAll[s._id] = allPresent ? null : 'Present';
+        });
+        
         setAttendance(markedAll);
     };
 
@@ -263,8 +268,27 @@ const AttendanceMarking = () => {
                     border: none; background: transparent; outline: none;
                     color: var(--text-main); font-family: inherit; font-size: 0.85rem; font-weight: 600;
                 }
-                .icon-btn-text {
+                .icon-btn-text.primary {
+                    background: var(--primary);
+                    color: white;
+                    padding: 0.6rem 1.25rem;
+                    border-radius: var(--radius-md);
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                     font-weight: 700 !important;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 12px rgba(75, 107, 80, 0.2);
+                }
+                .icon-btn-text.primary:hover:not(:disabled) {
+                    background: #3D5941;
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 16px rgba(75, 107, 80, 0.3);
+                }
+                .icon-btn-text.primary:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    filter: grayscale(1);
                 }
 
                 .notification-banner {

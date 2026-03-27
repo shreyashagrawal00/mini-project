@@ -55,7 +55,7 @@ const Register = () => {
                     </div>
                     <div>
                         <h1>Create Account</h1>
-                        <p>Join the SmartAttend portal</p>
+                        <p>Join the e-हाज़री portal</p>
                     </div>
                 </div>
 

@@ -37,7 +37,7 @@ const Navbar = ({ toggleSidebar }) => {
                     padding: 0 1.5rem;
                     position: sticky;
                     top: 1rem;
-                    margin: 1rem 1.5rem 1.5rem calc(var(--sidebar-width) + 2.5rem);
+                    margin: 1rem 1.5rem 1.5rem calc(var(--sidebar-width) + 1.5rem);
                     z-index: 900;
                     border-radius: var(--radius-lg);
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

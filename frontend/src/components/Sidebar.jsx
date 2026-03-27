@@ -33,15 +33,20 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     return (
         <aside className={`sidebar glass ${isOpen ? 'open' : ''} slide-up`}>
             <div className="sidebar-header">
-                <div className="brand">
-                    <div className="brand-icon">
-                        <GraduationCap size={20} />
+                <div className="sidebar-brand">
+                    <div className="brand-logo">
+                        <div className="brand-icon-wrap">
+                            <GraduationCap size={22} />
+                        </div>
+                        <div className="brand-text-group">
+                            <span className="brand-name">e-हाज़री</span>
+                            <span className="brand-tagline">Smart Attendance Portal</span>
+                        </div>
                     </div>
-                    <span>SmartAttend</span>
+                    <button className="mobile-close-btn" onClick={closeSidebar}>
+                        <X size={20} />
+                    </button>
                 </div>
-                <button className="mobile-close-btn" onClick={closeSidebar}>
-                    <X size={20} />
-                </button>
             </div>
 
             <div className="nav-section-label">NAVIGATION</div>
@@ -85,32 +90,51 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
                     border: 1px solid var(--border);
                 }
                 .sidebar-header {
-                    padding: 2rem 1.5rem 1.5rem;
+                    padding: 1.5rem 1.25rem 1.25rem;
+                    border-bottom: 1px solid var(--border);
+                }
+                .sidebar-brand {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    border-bottom: 1px solid var(--border);
                 }
-                .brand {
+                .brand-logo {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    font-size: 1.25rem;
-                    font-weight: 800;
-                    color: var(--text-main);
-                    font-family: 'Outfit', sans-serif;
-                    letter-spacing: -0.02em;
                 }
-                .brand-icon {
-                    width: 38px;
-                    height: 38px;
-                    background: var(--primary);
+                .brand-icon-wrap {
+                    width: 52px;
+                    height: 52px;
+                    background: linear-gradient(135deg, #2D4A32 0%, #4B6B50 100%);
                     color: white;
-                    border-radius: 12px;
+                    border-radius: 16px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 4px 12px rgba(75, 107, 80, 0.25);
+                    flex-shrink: 0;
+                    box-shadow: 0 8px 20px rgba(26, 43, 28, 0.4);
+                }
+                .brand-text-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1px;
+                }
+                .brand-name {
+                    font-size: 1.45rem;
+                    font-weight: 900;
+                    color: #1A2B1C;
+                    font-family: 'Outfit', sans-serif;
+                    letter-spacing: -0.03em;
+                    line-height: 1.2;
+                }
+                .brand-tagline {
+                    font-size: 0.62rem;
+                    font-weight: 800;
+                    color: #2D4A32;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    opacity: 1;
                 }
                 .mobile-close-btn {
                     display: none;

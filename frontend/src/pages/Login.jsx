@@ -35,8 +35,8 @@ const Login = () => {
                         <GraduationCap size={28} />
                     </div>
                     <div>
-                        <h1>Welcome back</h1>
-                        <p>Sign in to your SmartAttend account</p>
+                        <h1>Welcome Back</h1>
+                        <p>Sign in to your e-हाज़री account</p>
                     </div>
                 </div>
 

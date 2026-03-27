@@ -4,7 +4,7 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
     PieChart, Pie, Cell, LineChart, Line, AreaChart, Area, Legend
 } from 'recharts';
-import { TrendingUp, AlertTriangle, Users, BookOpen, ChevronRight, BarChart3, PieChart as PieChartIcon } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Users, BookOpen, ChevronRight, BarChart3, PieChart as PieChartIcon, AlertCircle, Download } from 'lucide-react';
 
 const Analytics = () => {
     const [stats, setStats] = useState(null);
@@ -71,7 +71,7 @@ const Analytics = () => {
                     <div className="stat-icon"><Users size={20} /></div>
                     <div className="stat-brief">
                         <span className="label">Total Students</span>
-                        <span className="value">{students.length}</span>
+                        <span className="value">{stats?.totalStudents || 0}</span>
                     </div>
                 </div>
                 <div className="stat-card glass scale-in stagger-2">
@@ -136,28 +136,6 @@ const Analytics = () => {
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
-                    </div>
-                </div>
-
-                <div className="chart-wrapper glass scale-in stagger-2">
-                    <div className="chart-header">
-                        <h3>Attendance Trends</h3>
-                        <p>Weekly variation in student presence.</p>
-                    </div>
-                    <div className="chart-placeholder">
-                        <LineChart size={48} />
-                        <p>Timeline Visualization Active</p>
-                    </div>
-                </div>
-
-                <div className="chart-wrapper glass scale-in stagger-3">
-                    <div className="chart-header">
-                        <h3>Class Comparison</h3>
-                        <p>Performance across different sections.</p>
-                    </div>
-                    <div className="chart-placeholder">
-                        <PieChart size={48} />
-                        <p>Comparative Data Analysis</p>
                     </div>
                 </div>
 
@@ -322,51 +300,88 @@ const Analytics = () => {
 
                 .analytics-grid {
                     display: grid;
-                    grid-template-columns: 2fr 1fr;
+                    grid-template-columns: 1fr 1fr;
                     gap: 1.5rem;
                 }
-                .chart-card { padding: 1.75rem; border-radius: var(--radius-xl); display: flex; flex-direction: column; }
+                .main-chart { grid-column: 1 / -1; }
+                .chart-card { padding: 1.75rem; border-radius: var(--radius-xl); display: flex; flex-direction: column; background: white; }
                 .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
                 .header-info { display: flex; align-items: center; gap: 10px; color: var(--text-main); font-weight: 700; }
                 .header-info h3 { font-size: 1.1rem; }
 
-                .main-chart { grid-row: span 1; }
-
                 .stat-card {
-                    flex: 1; display: flex; align-items: center; gap: 1rem;
-                    padding: 1.25rem 1.5rem; border-radius: var(--radius-lg);
+                    flex: 1; display: flex; align-items: center; gap: 1.25rem;
+                    padding: 1.5rem 1.75rem; border-radius: var(--radius-xl);
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative; overflow: hidden; background: white;
                 }
                 .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
                 .stat-icon {
-                    width: 44px; height: 44px; background: rgba(75, 107, 80, 0.1);
+                    width: 50px; height: 50px; background: var(--bg-subtle);
                     color: var(--primary); border-radius: 12px;
                     display: flex; align-items: center; justify-content: center;
-                    margin-top: 12px; background: transparent; color: var(--primary);
-                    font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 4px;
                 }
-                .text-action-btn:hover { text-decoration: underline; }
-
-                .bottom-chart { grid-column: span 1; }
-                .chart-container.centered { display: flex; align-items: center; justify-content: center; flex: 1; }
-
+                .stat-brief { display: flex; flex-direction: column; gap: 2px; }
+                .stat-brief .label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+                .stat-brief .value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); line-height: 1.1; }
+                
                 .badge {
                     padding: 4px 10px; background: var(--bg-subtle); color: var(--primary);
                     font-size: 0.65rem; font-weight: 800; border-radius: 20px; text-transform: uppercase;
                 }
 
-                .st-info-mini { display: flex; align-items: center; gap: 12px; }
-                .roll-tag { font-size: 0.75rem; font-weight: 700; color: var(--primary); background: var(--bg-subtle); padding: 2px 8px; border-radius: 4px; }
-                .name-bold { font-weight: 600; color: var(--text-main); font-size: 0.9rem; }
-                .rate-value.danger { color: var(--danger); font-weight: 800; font-size: 0.95rem; }
+                .bottom-chart { grid-column: span 1; }
+                .chart-container.centered { display: flex; align-items: center; justify-content: center; flex: 1; }
+                .chart-container { width: 100%; }
+
+                .report-footer-actions {
+                    display: flex; gap: 1.5rem; justify-content: flex-start;
+                    margin-top: 1rem; padding-bottom: 2rem;
+                }
+                .report-btn {
+                    display: flex; align-items: center; gap: 10px;
+                    padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700;
+                    font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+                    border: 1.5px solid transparent;
+                }
+                .report-btn.primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(75, 107, 80, 0.2); }
+                .report-btn.primary:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(75, 107, 80, 0.3); }
+                .report-btn.secondary { background: white; color: var(--primary); border-color: var(--primary); }
+                .report-btn.secondary:hover { background: var(--bg-subtle); transform: translateY(-3px); }
+
+                /* Modal Specifics */
+                .modal-overlay {
+                    position: fixed; inset: 0; background: rgba(26, 43, 28, 0.4);
+                    backdrop-filter: blur(8px); display: flex; align-items: center;
+                    justify-content: center; z-index: 2000; padding: 1.5rem;
+                }
+                .modal-card { width: 100%; max-width: 500px; background: white; padding: 2.25rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); }
+                .modal-card.large { max-width: 600px; }
+                .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+                .modal-header h2 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+                .modal-header p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+                .close-x { font-size: 1.75rem; color: var(--text-muted); line-height: 1; transition: color 0.2s; background: transparent; border: none; cursor: pointer; }
+                .close-x:hover { color: var(--danger); }
+                .modal-body { max-height: 60vh; overflow-y: auto; }
+                .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 2rem; }
+
+                .table-responsive.small { border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+                .custom-table { width: 100%; border-collapse: collapse; }
+                .custom-table th { background: var(--bg-subtle); padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+                .custom-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
                 
-                .mini-progress-track { width: 100%; height: 4px; background: var(--bg-subtle); border-radius: 4px; margin-top: 6px; overflow: hidden; }
-                .mini-progress-fill { height: 100%; background: var(--danger); border-radius: 4px; }
-                .empty-row { padding: 3rem; text-align: center; color: var(--text-muted); font-style: italic; }
+                .st-info-mini { display: flex; align-items: center; gap: 12px; }
+                .roll-tag { font-size: 0.75rem; font-weight: 700; color: var(--primary); background: var(--bg-subtle); padding: 2px 8px; border-radius: 4px; width: fit-content; }
+                .name-bold { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+                .rate-value.danger { color: #C1121F; font-weight: 800; font-size: 1rem; }
+                
+                .mini-progress-track { width: 100%; height: 6px; background: var(--bg-subtle); border-radius: 6px; margin-top: 8px; overflow: hidden; }
+                .mini-progress-fill { height: 100%; background: #C1121F; border-radius: 6px; }
 
                 @media (max-width: 1024px) {
                     .analytics-grid { grid-template-columns: 1fr; }
                     .bottom-chart { grid-column: auto; }
+                    .report-footer-actions { flex-direction: column; }
                 }
             `}</style>
         </div>
