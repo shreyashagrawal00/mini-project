@@ -1,6 +1,6 @@
 # 🏫 e-हाज़री | Smart Attendance Portal
 
-![Smart Attendance Banner](file:///C:/Users/shrey/.gemini/antigravity/brain/2e35aa62-813f-4c1d-8fbe-754f3011d130/smart_attendance_banner_1774704436545.png)
+![Smart Attendance Banner](./assets/banner.png)
 
 A premium, full-stack attendance management system with a modern **Sage Green** aesthetic, designed for schools and educational institutions.
 
