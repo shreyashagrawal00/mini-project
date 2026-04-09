@@ -41,21 +41,14 @@ const seedData = async () => {
 
         // Create Classes
         await Class.create([
-            { name: 'SB', subjectName: 'Science Section A' },
-            { name: '10-B', subjectName: 'Science Section B' },
-            { name: '10-C', subjectName: 'Commerce Section A' },
-            { name: '11-A', subjectName: 'Higher Secondary A' },
-            { name: '12-A', subjectName: 'Senior Secondary A' },
+
+
         ]);
         console.log('Classes Created!');
 
         // Create Students
         const students = await Student.create([
-            { name: 'John Doe', rollNo: '101', universityRollNo: 'UNI2024001', class: '10-A' },
-            { name: 'Jane Smith', rollNo: '102', universityRollNo: 'UNI2024002', class: '10-B' },
-            { name: 'Alice Brown', rollNo: '103', universityRollNo: 'UNI2024003', class: '10-A' },
-            { name: 'Bob Wilson', rollNo: '104', universityRollNo: 'UNI2024004', class: '10-C' },
-            { name: 'Charlie Davis', rollNo: '105', universityRollNo: 'UNI2024005', class: '10-B' },
+
         ]);
 
         console.log(`${students.length} Students Created!`);
@@ -65,13 +58,15 @@ const seedData = async () => {
         yesterday.setDate(yesterday.getDate() - 1);
         yesterday.setHours(0,0,0,0);
 
-        await Attendance.insertMany([
-            { student: students[0]._id, date: yesterday, status: 'Present', markedBy: admin._id },
-            { student: students[1]._id, date: yesterday, status: 'Absent', markedBy: admin._id },
-            { student: students[2]._id, date: yesterday, status: 'Present', markedBy: admin._id }
-        ]);
+        if (students.length >= 3) {
+            await Attendance.insertMany([
+                { student: students[0]._id, date: yesterday, status: 'Present', markedBy: admin._id },
+                { student: students[1]._id, date: yesterday, status: 'Absent', markedBy: admin._id },
+                { student: students[2]._id, date: yesterday, status: 'Present', markedBy: admin._id }
+            ]);
+            console.log('Sample Attendance Records Created!');
+        }
 
-        console.log('Sample Attendance Records Created!');
         process.exit();
     } catch (error) {
         console.error(`Error with seeding: ${error.message}`);
