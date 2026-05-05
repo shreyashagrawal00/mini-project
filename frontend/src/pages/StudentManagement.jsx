@@ -115,7 +115,7 @@ const StudentManagement = () => {
         setEditingStudent(null);
     };
 
-    const filteredStudents = (selectedClass ? students.filter(s => s.class === selectedClass.name) : students).filter(s => 
+    const filteredStudents = (selectedClass ? students.filter(s => s.class?.trim() === selectedClass.name?.trim()) : students).filter(s => 
         s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         s.rollNo.includes(searchTerm) ||
         (s.universityRollNo && s.universityRollNo.toLowerCase().includes(searchTerm.toLowerCase()))

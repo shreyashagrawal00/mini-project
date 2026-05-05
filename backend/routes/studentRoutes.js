@@ -15,17 +15,23 @@ router.get('/', protect, async (req, res) => {
 // @route   POST /api/students
 router.post('/', protect, async (req, res) => {
     try {
-        const { name, email, rollNo, universityRollNo, class: studentClass } = req.body;
+        let { name, rollNo, universityRollNo, class: studentClass } = req.body;
+        const email = req.body.email?.toLowerCase();
+
+        // Trim inputs to prevent whitespace issues
+        rollNo = rollNo?.trim();
+        universityRollNo = universityRollNo?.trim();
+        studentClass = studentClass?.trim();
 
         const studentExists = await Student.findOne({ rollNo, class: studentClass });
         if (studentExists) {
-            res.status(400).json({ message: `Roll No ${rollNo} already exists in class ${studentClass}` });
+            res.status(400).json({ message: `Roll No ${rollNo} already exists in class ${studentClass} (Assigned to: ${studentExists.name})` });
             return;
         }
 
         const uniRollExists = await Student.findOne({ universityRollNo });
         if (uniRollExists) {
-            res.status(400).json({ message: `University Roll No ${universityRollNo} is already assigned to ${uniRollExists.name}` });
+            res.status(400).json({ message: `University Roll No ${universityRollNo} is already assigned to ${uniRollExists.name} in class ${uniRollExists.class}` });
             return;
         }
 
@@ -59,15 +65,37 @@ router.post('/', protect, async (req, res) => {
 // @route   PUT /api/students/:id
 router.put('/:id', protect, async (req, res) => {
     try {
-        const { name, email, rollNo, universityRollNo, class: studentClass } = req.body;
+        let { name, rollNo, universityRollNo, class: studentClass } = req.body;
+        const email = req.body.email?.toLowerCase();
         const student = await Student.findById(req.params.id);
 
         if (student) {
+            // Trim inputs if provided
+            rollNo = rollNo?.trim() || student.rollNo;
+            universityRollNo = universityRollNo?.trim() || student.universityRollNo;
+            studentClass = studentClass?.trim() || student.class;
+
+            // Check if new rollNo already exists for ANOTHER student in the same class
+            if (rollNo !== student.rollNo || studentClass !== student.class) {
+                const rollExists = await Student.findOne({ rollNo, class: studentClass, _id: { $ne: student._id } });
+                if (rollExists) {
+                    return res.status(400).json({ message: `Roll No ${rollNo} is already assigned to ${rollExists.name} in class ${studentClass}` });
+                }
+            }
+
+            // Check if new universityRollNo already exists for ANOTHER student
+            if (universityRollNo !== student.universityRollNo) {
+                const uniExists = await Student.findOne({ universityRollNo, _id: { $ne: student._id } });
+                if (uniExists) {
+                    return res.status(400).json({ message: `University Roll No ${universityRollNo} is already assigned to ${uniExists.name}` });
+                }
+            }
+
             student.name = name || student.name;
             student.email = email || student.email;
-            student.rollNo = rollNo || student.rollNo;
-            student.universityRollNo = universityRollNo || student.universityRollNo;
-            student.class = studentClass || student.class;
+            student.rollNo = rollNo;
+            student.universityRollNo = universityRollNo;
+            student.class = studentClass;
 
             const updatedStudent = await student.save();
             res.json(updatedStudent);

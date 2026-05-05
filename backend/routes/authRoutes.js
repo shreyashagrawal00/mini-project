@@ -12,7 +12,8 @@ const generateToken = (id) => {
 // @desc    Auth user & get token
 // @route   POST /api/auth/login
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const email = req.body.email?.toLowerCase();
+    const { password } = req.body;
     try {
         const user = await User.findOne({ email });
 
@@ -35,7 +36,8 @@ router.post('/login', async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/auth/register
 router.post('/register', async (req, res) => {
-    const { name, email, password, isAdmin } = req.body;
+    const email = req.body.email?.toLowerCase();
+    const { name, password, isAdmin } = req.body;
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -68,7 +70,7 @@ router.post('/register', async (req, res) => {
 // @desc    Send OTP to email
 // @route   POST /api/auth/send-otp
 router.post('/send-otp', async (req, res) => {
-    const { email } = req.body;
+    const email = req.body.email?.toLowerCase();
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -99,7 +101,8 @@ router.post('/send-otp', async (req, res) => {
 // @desc    Verify OTP and login
 // @route   POST /api/auth/verify-otp
 router.post('/verify-otp', async (req, res) => {
-    const { email, otp } = req.body;
+    const email = req.body.email?.toLowerCase();
+    const { otp } = req.body;
     try {
         const user = await User.findOne({ 
             email, 
